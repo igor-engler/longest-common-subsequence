@@ -17,17 +17,12 @@ int lcs_recursive(std::string str1, std::string str2, int size_str1, int size_st
         cont = 0;
         mil++;
     }
-
-    // se o tamanho de uma das strings for 0, retorna 0
     if (size_str1 == 0 || size_str2 == 0)
     {
         return 0;
     }
-    // se os ultimos caracteres são iguais, remove eles
-    // e encontra a subsequencia do restante da astring
     if (str1[size_str1 - 1] == str2[size_str2 - 1])
     {
-        // insere o caractere igual na frente da string
         output.insert(0, 1, str1[size_str1 - 1]);
         return 1 + lcs_recursive(str1, str2, size_str1 - 1, size_str2 - 1, output, cont, mil);
     }
@@ -46,12 +41,12 @@ int lcs_recursive(std::string str1, std::string str2, int size_str1, int size_st
 int main()
 {
     // contador de comparações
-    std::list<std::string> dirlist({"Strings10.txt", "Strings12.txt", "Strings15.txt", "Strings17.txt", "Strings20.txt", "Strings25.txt"});
-
+    // std::list<std::string> dirlist({"Strings10.txt", "Strings12.txt", "Strings15.txt", "Strings17.txt", "Strings20.txt", "Strings25.txt"});
+    std::list<std::string> dirlist({"18.txt", "19.txt", "20.txt", "21.txt", "22.txt", "23.txt", "24.txt"});
     for (std::string val : dirlist)
     {
         // std::cout << val << std::endl;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 4; i++)
         {
             int cont = 0;
             // contador de milhões de comparações, quando aumenta zera o cont
@@ -78,25 +73,17 @@ int main()
             }
             file.close();
 
-            // std::cout << entrada1 << std::endl;
-            // std::cout << entrada2 << std::endl;
-
             std::string output = "";
             auto start = std::chrono::steady_clock::now();
             auto res = lcs_recursive(entrada1, entrada2, entrada1.length(), entrada2.length(), output, cont, mil);
-            auto elapsed = std::chrono::steady_clock::now();
-            auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed - start).count();
-            std::ofstream fileOUT("recursive.txt", std::ios::app);
-            // std::cout << "File " << val << "done" << std::endl;
-            fileOUT << "----------------------------------------------------------------" << std::endl;
-            fileOUT << "File: " << val << std::endl;
-            fileOUT << "LCS: " << output << " of size " << res << std::endl;
-            fileOUT << "Comparisons: " << cont << std::endl;
-            fileOUT << "100 million * " << mil << std::endl;
-            fileOUT << "Time elapsed: " << millis << " ms" << std::endl;
+            auto end = std::chrono::steady_clock::now();
+            auto millis = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(end - start);
+            std::ofstream fileOUT("recursive.csv", std::ios::app);
+            fileOUT << val << ',' << cont << ',' << mil << ',' << millis.count() << ',' << res << ',' << output << ',' << '\n';
+
+            fileOUT.flush();
             fileOUT.close();
         }
     }
-    // getchar();
     return 0;
 }
