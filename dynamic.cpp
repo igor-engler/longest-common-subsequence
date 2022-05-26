@@ -15,13 +15,21 @@ int dynamic(std::string str1, std::string str2, int size_str1, int size_str2, st
     {
         for (int j = 0; j <= size_str2; j++)
         {
-            cont++;
+
             if (i == 0 || j == 0)
+            {
                 table[i][j] = 0;
+            }
             else if (str1[i - 1] == str2[j - 1])
+            {
+                cont++;
                 table[i][j] = table[i - 1][j - 1] + 1;
+            }
             else
+            {
+                cont++;
                 table[i][j] = std::max(table[i - 1][j], table[i][j - 1]);
+            }
         }
     }
 
@@ -31,14 +39,17 @@ int dynamic(std::string str1, std::string str2, int size_str1, int size_str2, st
     int i = size_str1, j = size_str2;
     while (i > 0 && j > 0)
     {
+        // cont++;
         if (str1[i - 1] == str2[j - 1])
         {
+            cont++;
             output.insert(0, 1, str1[i - 1]);
             i--;
             j--;
         }
         else if (table[i - 1][j] > table[i][j - 1])
         {
+            // cont++;
             i--;
         }
         else
@@ -52,8 +63,8 @@ int dynamic(std::string str1, std::string str2, int size_str1, int size_str2, st
 int main()
 {
     // contador de comparações
-    std::list<std::string> dirlist({"Strings12.txt", "Strings15.txt", "Strings17.txt", "Strings20.txt", "Strings25.txt", "Strings10000.txt"});
-
+    std::list<std::string> dirlist({"10.txt", "25.txt", "50.txt", "100.txt", "150.txt", "200.txt", "300.txt", "500.txt", "750.txt", "1000.txt", "2000.txt", "3000.txt", "5000.txt", "7500.txt", "10000.txt"});
+    // std::list<std::string> dirlist({"10.txt", "11.txt", "12.txt", "13.txt", "14.txt", "15.txt", "16.txt", "17.txt", "18.txt", "19.txt", "20.txt", "21.txt", "22.txt", "23.txt", "24.txt"});
     for (std::string val : dirlist)
     {
         // std::cout << val << std::endl;
@@ -87,19 +98,19 @@ int main()
             std::string output = "";
             auto start = std::chrono::steady_clock::now();
             auto res = dynamic(entrada1, entrada2, entrada1.length(), entrada2.length(), output, cont);
-            auto elapsed = std::chrono::steady_clock::now();
-            auto millis = std::chrono::duration_cast<std::chrono::microseconds>(elapsed - start).count();
-            std::ofstream fileOUT("dynamic.txt", std::ios::app);
-            // std::cout << "File " << val << "done" << std::endl;
-            fileOUT << "----------------------------------------------------------------" << std::endl;
-            fileOUT << "File: " << val << std::endl;
-            fileOUT << "LCS: " << output << " of size " << res << std::endl;
-            fileOUT << "Comparisons: " << cont << std::endl;
-            // fileOUT << "100 million * " << mil << std::endl;
-            fileOUT << "Time elapsed: " << millis << " ms" << std::endl;
+            // auto elapsed = std::chrono::steady_clock::now();
+            auto end = std::chrono::steady_clock::now();
+            auto millis = std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(end - start);
+            // auto millis = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+            std::ofstream fileOUT("dynamic.csv", std::ios::app);
+            // std::cout << millis.count() << std::endl;
+            // fileOUT << val << ',' << cont << ',' << millis.count() << '\n';
+            fileOUT << val << ';' << cont << ';' << mil << ';' << millis.count() << ';' << res << ';' << output << '\n';
+
+            fileOUT.flush();
             fileOUT.close();
         }
     }
-    //getchar();
+    // getchar();
     return 0;
 }
